@@ -1,48 +1,68 @@
 
-import { useEffect } from "react";
-import { useState } from "react";
-import PieChart from 'react-simple-pie-chart';
+import { useEffect ,useState} from "react";
+
+import PieChart from "react-simple-pie-chart";
 
 const App = () => {
-  const [datas, setdatas] = useState([])
-  useEffect(() => {
-    fetch("data.json")
-      .then(res => res.json())
-    .then(data=> setdatas(data))
-  }, [])
+  const [datas, setdatas] = useState({});
+  const [loading, setLoading] =useState(false)
 
+  useEffect(() => {
+  setLoading(true)
+  fetch("data.json")
+    .then(res => res.json())
+    .then(data => {
+      setdatas(data)
+    setLoading(false)})
+    
+}, []);
+  if (loading) {
+    <p>Loading</p>
+  }
+  if (!datas) {
+    return loading
+  }
+ const attendanceData = datas?.ATTENDANCE;
     const good = datas?.BehavioralAnalytics?.filter(behavior => behavior === "good").length;
     const bad = datas?.BehavioralAnalytics?.filter(behavior => behavior === "bad").length;
     
- const attendanceData = datas?.ATTENDANCE;
+
 
    
-  console.log(datas);
+  
   return (
     <div className="bg-red-50 h-screen w-full">
-      <nav className="w-full h-16 bg-gray-600"></nav>
+      <nav className="w-full h-16 bg-gray-600">
+     
+      </nav>
       
       <div className="container mx-auto px-2">
          < div className="bg-red-50 h-screen w-full">
         
-          <h1 className="text-4xl font-bold">HELLO! {datas.NAME}</h1>
-          <div className="flex justify-between items-center">
-            
-       
-          
-          {Object.keys(attendanceData).map((day, index) => (
-            <div className="flex flex-col" key={index}>
-              <h4>{day}</h4>
-              <p>Date: {attendanceData[day].date}</p>
-              <p>FN: {attendanceData[day].fn}</p>
-              <p>AN: {attendanceData[day].an}</p>
-            </div>
-          ))}
-       
-            
-            
+          <h1 className="text-4xl font-bold my-6">HELLO! {datas.NAME}</h1>
+         <div className="flex justify-between items-center py-5 bg-gray-200">
+  
+  <div className="flex flex-col ml-7">
+    
+    <h4></h4>
+    <p></p>
+    <p className="mt-7 text-3xl font-bold">FN </p>
+    <p className="mt-12 text-3xl font-bold">AN: </p>
+  </div>
+
+  
+  {Object?.keys(attendanceData)?.map((day, index) => (
+    <div className="flex flex-col text-center" key={index}>
+     
+      <h4 className="text-4xl font-bold">{day}</h4>
+      <p className="text-lg font-semibold">{attendanceData[day].date}</p>
+      <p className="w-12 h-12 my-3 ml-10" style={{ backgroundColor: attendanceData[day].fn === "absent" ? 'red' : 'green'}}> </p>
+      <p className="w-12 h-12 my-3 ml-10" style={{ backgroundColor: attendanceData[day].an === "absent" ? 'red' : 'green', }}> </p>
+    </div>
+  ))}
 </div>
-        <div className="flex justify-center items-start ">
+
+        <div className="flex justify-around mt-4 items-start ">
             <div>
                <div className="bg-gray-200 p-10 h-72  w-96 ">
             <h1 className="text-center text-3xl font-bold">Homeworks</h1>
